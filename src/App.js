@@ -1,19 +1,22 @@
 import React from "react";
-import { Router, Route } from "react-router-dom";
-import { createBrowserHistory } from "history";
-import GreetingCat from "./GreetingCat";
-import RandomCat from "./RandomCat";
-import "./App.css";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import * as serviceWorker from "./serviceWorker";
 
-const defaultHistory = createBrowserHistory();
-
-function App({ history = defaultHistory }) {
-  return (
-    <Router history={history}>
-      <Route exact path="/" component={RandomCat} />
-      <Route exact path="/cat/:greeting" component={GreetingCat} />
-    </Router>
+window.renderCats = (containerId, history) => {
+  ReactDOM.render(
+    <App history={history} />,
+    document.getElementById(containerId)
   );
-}
+  serviceWorker.unregister();
+};
 
-export default App;
+window.unmountCats = (containerId) => {
+  ReactDOM.unmountComponentAtNode(document.getElementById(containerId));
+};
+
+if (!document.getElementById("Cats-container")) {
+  ReactDOM.render(<App />, document.getElementById("root"));
+  serviceWorker.unregister();
+}
